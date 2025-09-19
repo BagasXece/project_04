@@ -7,8 +7,14 @@ environment:
   sdk: ^3.9.0
 
 dependencies:
+  connectivity_plus: ^7.0.0
   flutter:
     sdk: flutter
+  flutter_dotenv: ^6.0.0
+  flutter_typeahead: ^4.8.0
+  intl: ^0.20.2
+  provider: ^6.1.5+1
+  supabase_flutter: ^2.10.1
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +23,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+  - .env
