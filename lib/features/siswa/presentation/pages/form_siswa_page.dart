@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:project_4/features/siswa/data/models/dusun_item_model.dart';
+import 'package:project_4/features/siswa/presentation/widgets/form_widget.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/utils/toast.dart';
 import '../../../../features/siswa/data/models/siswa_model.dart';
@@ -391,20 +392,20 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          _textField(
+          modernTextField(
             controller: _nisnC,
             label: 'NISN',
-            type: TextInputType.number,
+            keyboardType: TextInputType.number,
             validator: (s) => s!.length < 10 ? 'NISN 10 digit' : null,
           ),
-          _textField(controller: _namaC, label: 'Nama Lengkap'),
-          _dropDown(
+          modernTextField(controller: _namaC, label: 'Nama Lengkap'),
+          modernDropdown(
             label: 'Jenis Kelamin',
             value: _formProv.jenisKelamin,
             items: const ['Laki-laki', 'Perempuan'],
             onChanged: (v) => setState(() => _formProv.jenisKelamin = v),
           ),
-          _dropDown(
+          modernDropdown(
             label: 'Agama',
             value: _formProv.agamaNama,
             items: const [
@@ -417,19 +418,19 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
             ],
             onChanged: (v) => setState(() => _formProv.agamaNama = v),
           ),
-          _textField(controller: _tempatLahirC, label: 'Tempat Lahir'),
-          _dateField(_tanggalLahirC, 'Tanggal Lahir'),
-          _textField(
+          modernTextField(controller: _tempatLahirC, label: 'Tempat Lahir'),
+          modernDateField(controller: _tanggalLahirC, label: 'Tanggal Lahir', context: context),
+          modernTextField(
             controller: _noHpC,
             label: 'No HP',
-            type: TextInputType.phone,
-            formatters: [FilteringTextInputFormatter.digitsOnly],
+            keyboardType: TextInputType.phone,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
-          _textField(
+          modernTextField(
             controller: _nikC,
             label: 'NIK',
-            type: TextInputType.number,
-            formatters: [FilteringTextInputFormatter.digitsOnly],
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ],
       ),
@@ -441,44 +442,44 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          _textField(controller: _jalanC, label: 'Jalan / Nomor Rumah'),
+          modernTextField(controller: _jalanC, label: 'Jalan / Nomor Rumah'),
           Row(
             children: [
               Expanded(
-                child: _textField(
+                child: modernTextField(
                   controller: _rtC,
                   label: 'RT',
-                  type: TextInputType.number,
+                  keyboardType: TextInputType.number,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _textField(
+                child: modernTextField(
                   controller: _rwC,
                   label: 'RW',
-                  type: TextInputType.number,
+                  keyboardType: TextInputType.number,
                 ),
               ),
             ],
           ),
           _autocompleteDusun(),
-          _textField(controller: _desaC, label: 'Desa', readOnly: true),
-          _textField(
+          modernTextField(controller: _desaC, label: 'Desa', readOnly: true),
+          modernTextField(
             controller: _kecamatanC,
             label: 'Kecamatan',
             readOnly: true,
           ),
-          _textField(
+          modernTextField(
             controller: _kabupatenC,
             label: 'Kabupaten',
             readOnly: true,
           ),
-          _textField(controller: _provinsiC, label: 'Provinsi', readOnly: true),
-          _textField(
+          modernTextField(controller: _provinsiC, label: 'Provinsi', readOnly: true),
+          modernTextField(
             controller: _kodePosC,
             label: 'Kode Pos',
-            type: TextInputType.number,
-            formatters: [FilteringTextInputFormatter.digitsOnly],
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             readOnly: true,
           ),
         ],
@@ -491,9 +492,9 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          _textField(controller: _ayahC, label: 'Nama Ayah'),
-          _textField(controller: _ibuC, label: 'Nama Ibu'),
-          _textField(controller: _waliC, label: 'Nama Wali (opsional)'),
+          modernTextField(controller: _ayahC, label: 'Nama Ayah'),
+          modernTextField(controller: _ibuC, label: 'Nama Ibu'),
+          modernTextField(controller: _waliC, label: 'Nama Wali (opsional)'),
           const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerLeft,
@@ -507,7 +508,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
               },
             ),
           ),
-          _textField(
+          modernTextField(
             controller: _alamatOrtuC,
             label: 'Alamat Orang Tua / Wali',
             maxLines: 2,
@@ -541,7 +542,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
         if (controller.text.isEmpty && _dusunC.text.isNotEmpty) {
           controller.text = _dusunC.text;
         }
-        return _textField(
+        return modernTextField(
           controller: controller,
           label: 'Dusun',
           suffixIcon: null,
@@ -591,117 +592,6 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /* --------------------------------------------------------------------------
-   *  HELPER WIDGET
-   * -------------------------------------------------------------------------- */
-  Widget _textField({
-    required TextEditingController controller,
-    required String label,
-    TextInputType? type,
-    List<TextInputFormatter>? formatters,
-    bool readOnly = false,
-    int maxLines = 1,
-    Widget? suffixIcon,
-    FocusNode? focusNode,
-    String? Function(String?)? validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: type,
-        inputFormatters: formatters,
-        readOnly: readOnly,
-        maxLines: maxLines,
-        focusNode: focusNode,
-        validator: validator,
-        decoration: InputDecoration(
-          labelText: label,
-          suffixIcon: suffixIcon,
-          filled: true,
-          fillColor: const Color(0xFFF9FAFB),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF3B82F6), width: 2),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _dropDown({
-    required String label,
-    String? value,
-    required List<String> items,
-    ValueChanged<String?>? onChanged,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: DropdownButtonFormField<String>(
-        initialValue: value,
-        items: items
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-            .toList(),
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: const Color(0xFFF9FAFB),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF3B82F6), width: 2),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _dateField(TextEditingController c, String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: c,
-        readOnly: true,
-        onTap: () async {
-          final picked = await showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(1980),
-            lastDate: DateTime.now(),
-          );
-          if (picked != null) {
-            c.text = DateFormat('dd-MM-yyyy').format(picked);
-          }
-        },
-        decoration: InputDecoration(
-          labelText: label,
-          suffixIcon: const Icon(Icons.calendar_today),
-          filled: true,
-          fillColor: const Color(0xFFF9FAFB),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF3B82F6), width: 2),
-          ),
-        ),
       ),
     );
   }

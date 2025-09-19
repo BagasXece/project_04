@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:project_4/core/themes/app_theme.dart';
 import 'package:project_4/features/siswa/domain/repositories/siswa_repository.dart';
 import 'package:project_4/features/siswa/domain/repositories/siswa_repository_impl.dart';
 import 'package:project_4/features/siswa/presentation/providers/siswa_list_provider.dart';
@@ -42,16 +43,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Seleksi TNI',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: const Color(0xFF3B82F6),
-        scaffoldBackgroundColor: const Color(0xFFF8FAFC),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1E40AF),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-        ),
-      ),
+      theme: appTheme,
       home: ChangeNotifierProvider(
         create: (_) =>
             SiswaListProvider(repository: context.read<SiswaRepository>()),
