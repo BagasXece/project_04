@@ -192,7 +192,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
             _tanggalLahirC.text.isEmpty ||
             _noHpC.text.isEmpty ||
             _nikC.text.isEmpty) {
-          Toast.warning(context, 'Lengkapi semua field data pribadi');
+          Toast.warning('Lengkapi semua field data pribadi');
           return false;
         }
         return true;
@@ -201,7 +201,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
             _rtC.text.isEmpty ||
             _rwC.text.isEmpty ||
             _formProv.idDusun == null) {
-          Toast.warning(context, 'Lengkapi alamat & pilih dusun');
+          Toast.warning('Lengkapi alamat & pilih dusun');
           return false;
         }
         return true;
@@ -209,7 +209,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
         if (_ayahC.text.isEmpty ||
             _ibuC.text.isEmpty ||
             _alamatOrtuC.text.isEmpty) {
-          Toast.warning(context, 'Lengkapi data orang tua / wali');
+          Toast.warning('Lengkapi data orang tua / wali');
           return false;
         }
         return true;
@@ -230,7 +230,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
       // 1. Agama
       final idAgama = await _repo.getAgamaId(_formProv.agamaNama!);
       if (idAgama == null) {
-        Toast.error(context, 'Agama tidak ditemukan');
+        Toast.error('Agama tidak ditemukan');
         return;
       }
 
@@ -274,17 +274,16 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
         'id_wali': idWali,
       };
 
-      if (widget.siswa == null) {
-        await _repo.insertSiswa(data);
-        Toast.success(context, 'Siswa berhasil ditambahkan');
-      } else {
-        await _repo.updateSiswa(widget.siswa!.id!, data);
-        Toast.success(context, 'Siswa berhasil diperbarui');
+      final success = await _formProv.submit(
+        repo: _repo,
+        data: data,
+        id: widget.siswa?.id,
+      );
+      if (success && mounted) {
+        Navigator.pop(context, true);
       }
-
-      if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      Toast.error(context, e.toString());
+      Toast.error(e.toString());
     } finally {
       _formProv.setLoading(false);
     }
@@ -398,16 +397,16 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
             keyboardType: TextInputType.number,
             validator: (s) => s!.length < 10 ? 'NISN 10 digit' : null,
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(controller: _namaC, label: 'Nama Lengkap'),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernDropdown(
             label: 'Jenis Kelamin',
             value: _formProv.jenisKelamin,
             items: const ['Laki-laki', 'Perempuan'],
             onChanged: (v) => setState(() => _formProv.jenisKelamin = v),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernDropdown(
             label: 'Agama',
             value: _formProv.agamaNama,
@@ -421,18 +420,22 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
             ],
             onChanged: (v) => setState(() => _formProv.agamaNama = v),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(controller: _tempatLahirC, label: 'Tempat Lahir'),
-          SizedBox(height: 10,),
-          modernDateField(controller: _tanggalLahirC, label: 'Tanggal Lahir', context: context),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
+          modernDateField(
+            controller: _tanggalLahirC,
+            label: 'Tanggal Lahir',
+            context: context,
+          ),
+          SizedBox(height: 10),
           modernTextField(
             controller: _noHpC,
             label: 'No HP',
             keyboardType: TextInputType.phone,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(
             controller: _nikC,
             label: 'NIK',
@@ -450,7 +453,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
       child: Column(
         children: [
           modernTextField(controller: _jalanC, label: 'Jalan / Nomor Rumah'),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           Row(
             children: [
               Expanded(
@@ -470,25 +473,29 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
               ),
             ],
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           _autocompleteDusun(),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(controller: _desaC, label: 'Desa', readOnly: true),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(
             controller: _kecamatanC,
             label: 'Kecamatan',
             readOnly: true,
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(
             controller: _kabupatenC,
             label: 'Kabupaten',
             readOnly: true,
           ),
-          SizedBox(height: 10,),
-          modernTextField(controller: _provinsiC, label: 'Provinsi', readOnly: true),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
+          modernTextField(
+            controller: _provinsiC,
+            label: 'Provinsi',
+            readOnly: true,
+          ),
+          SizedBox(height: 10),
           modernTextField(
             controller: _kodePosC,
             label: 'Kode Pos',
@@ -507,12 +514,12 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
       child: Column(
         children: [
           modernTextField(controller: _ayahC, label: 'Nama Ayah'),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(controller: _ibuC, label: 'Nama Ibu'),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(controller: _waliC, label: 'Nama Wali (opsional)'),
           const SizedBox(height: 8),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           Align(
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
@@ -525,7 +532,7 @@ class _FormSiswaBodyState extends State<_FormSiswaBody> {
               },
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           modernTextField(
             controller: _alamatOrtuC,
             label: 'Alamat Orang Tua / Wali',

@@ -1,3 +1,5 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:project_4/core/utils/network_info.dart';
 import 'package:project_4/features/siswa/data/models/dusun_item_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/errors/exceptions.dart';
@@ -7,11 +9,20 @@ import '../../../../core/errors/exceptions.dart';
 /// kabupaten, provinsi, kode_pos serta view v_siswa_full & search_dusun_full.
 class SiswaRemoteDataSource {
   final SupabaseClient _client = Supabase.instance.client;
+  final NetworkInfo _network;
+
+  SiswaRemoteDataSource({NetworkInfo? network})
+    : _network = network ?? NetworkInfoImpl(Connectivity());
+
+  Future<void> _checkConnection() async {
+    if (!await _network.isConnected) throw NoInternetException();
+  }
 
   /* ----------------------------------------------------------
    *  AREA SISWA
    * ---------------------------------------------------------- */
   Future<List<Map<String, dynamic>>> getSiswa() async {
+    await _checkConnection();
     try {
       final res = await _client
           .from('v_siswa_full')
@@ -26,6 +37,7 @@ class SiswaRemoteDataSource {
   }
 
   Future<Map<String, dynamic>?> getAlamatSiswa(int idAlamat) async {
+    await _checkConnection();
     try {
       return await _client
           .from('v_siswa_full')
@@ -38,16 +50,18 @@ class SiswaRemoteDataSource {
   }
 
   Future<void> insertSiswa(Map<String, dynamic> data) async {
+    await _checkConnection();
     try {
       await _client.from('siswa').insert(data);
     } on PostgrestException catch (e) {
-      throw ServerException(e.message);
+      throw ServerException('DB ${e.code} – ${e.message}');
     } catch (e) {
       throw ServerException(e.toString());
     }
   }
 
   Future<void> updateSiswa(int id, Map<String, dynamic> data) async {
+    await _checkConnection();
     try {
       await _client.from('siswa').update(data).eq('id', id);
     } on PostgrestException catch (e) {
@@ -58,6 +72,7 @@ class SiswaRemoteDataSource {
   }
 
   Future<void> deleteSiswa(int id) async {
+    await _checkConnection();
     try {
       await _client.from('siswa').delete().eq('id', id);
     } on PostgrestException catch (e) {
@@ -76,6 +91,7 @@ class SiswaRemoteDataSource {
     required int rw,
     required int idDusun,
   }) async {
+    await _checkConnection();
     // 1. Coba insert langsung
     try {
       final res = await _client
@@ -115,6 +131,7 @@ class SiswaRemoteDataSource {
     required String namaIbu,
     int? idAlamat,
   }) async {
+    await _checkConnection();
     try {
       final res = await _client
           .from('orang_tua')
@@ -137,6 +154,7 @@ class SiswaRemoteDataSource {
    *  AREA WALI (opsional)
    * ---------------------------------------------------------- */
   Future<int?> insertWali({required String namaWali, int? idAlamat}) async {
+    await _checkConnection();
     try {
       final res = await _client
           .from('wali')
@@ -155,6 +173,7 @@ class SiswaRemoteDataSource {
    *  AREA AGAMA
    * ---------------------------------------------------------- */
   Future<int?> getAgamaId(String namaAgama) async {
+    await _checkConnection();
     try {
       final res = await _client
           .from('agama')
@@ -173,6 +192,7 @@ class SiswaRemoteDataSource {
    *  AREA WILAYAH → autocomplete dusun
    * ---------------------------------------------------------- */
   Future<List<DusunItemModel>> getDusunSuggestions(String query) async {
+    await _checkConnection();
     try {
       final res = await _client
           .from('search_dusun_full')
@@ -186,6 +206,7 @@ class SiswaRemoteDataSource {
   }
 
   Future<Map<String, dynamic>?> getDusunDetails(String namaDusun) async {
+    await _checkConnection();
     try {
       final res = await _client
           .from('search_dusun_full')

@@ -5,3 +5,5 @@ class ServerException implements Exception {
   @override
   String toString() => 'ServerException: $message';
 }
+
+class NoInternetException implements Exception {}

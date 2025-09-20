@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_4/core/errors/exceptions.dart';
+import 'package:project_4/core/utils/toast.dart';
+import 'package:project_4/features/siswa/domain/repositories/siswa_repository.dart';
 
 class SiswaFormProvider with ChangeNotifier {
   // Step 0
@@ -70,7 +73,7 @@ class SiswaFormProvider with ChangeNotifier {
     required String rt,
     required String rw,
     required int? idDusun,
-    bool silent = false
+    bool silent = false,
   }) {
     this.jalan = jalan;
     this.rt = rt;
@@ -78,4 +81,34 @@ class SiswaFormProvider with ChangeNotifier {
     this.idDusun = idDusun;
     if (!silent) notifyListeners();
   }
+
+  Future<bool> submit({
+    required SiswaRepository repo,
+    required Map<String, dynamic> data,
+    int? id, // null → insert
+  }) async {
+    setLoading(true);
+    try {
+      if (id == null) {
+        await repo.insertSiswa(data);
+        Toast.success('Berhasil disimpan');
+      } else {
+        await repo.updateSiswa(id, data);
+        Toast.success('Berhasil diperbarui');
+      }
+      return true;
+    } on NoInternetException {
+      Toast.error('Tidak ada koneksi internet');
+      return false;
+    } on ServerException catch (e) {
+      Toast.error(e.message);
+      return false;
+    } catch (e) {
+      Toast.error('Terjadi kesalahan: $e');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }
+
 }

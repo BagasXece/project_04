@@ -14,6 +14,15 @@ class SiswaListPage extends StatefulWidget {
 
 class _SiswaListPageState extends State<SiswaListPage> {
   @override
+  void initState() {
+    super.initState();
+    // baru load data & boleh pakai Toast
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SiswaListProvider>().loadSiswa();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => SiswaListProvider(
@@ -35,7 +44,11 @@ class _SiswaListPageState extends State<SiswaListPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
+                    Icon(
+                      Icons.people_outline,
+                      size: 64,
+                      color: Colors.grey[400],
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'Belum ada data siswa',
@@ -150,7 +163,11 @@ class _SiswaListPageState extends State<SiswaListPage> {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, SiswaListProvider provider, int id) {
+  void _showDeleteDialog(
+    BuildContext context,
+    SiswaListProvider provider,
+    int id,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

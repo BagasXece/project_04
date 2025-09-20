@@ -1,60 +1,34 @@
-class SiswaModel {
-  final int? id;
-  final String nisn;
-  final String namaLengkap;
-  final String jenisKelamin;
-  final int idAgama;
-  final String namaAgama;
-  final String tempatLahir;
-  final DateTime tanggalLahir;
-  final String noHp;
-  final String nik;
-  final int? idAlamat;
-  final String jalanAlamat;
-  final int rtAlamat;
-  final int rwAlamat;
-  final int? idDusun;
-  final String namaDusun;
-  final String namaDesa;
-  final String namaKecamatan;
-  final String namaProvinsi;
-  final String namaKabupaten;
-  final String kodePos;
-  final int? idOrangTua;
-  final int? idWali;
-  final String namaAyah;
-  final String namaIbu;
-  final String? namaWali;
-  final String? alamatOrtu;
+import 'package:project_4/features/siswa/domain/entities/siswa_entity.dart';
 
+class SiswaModel extends SiswaEntity{
   SiswaModel({
-    this.id,
-    required this.nisn,
-    required this.namaLengkap,
-    required this.jenisKelamin,
-    required this.idAgama,
-    required this.namaAgama,
-    required this.tempatLahir,
-    required this.tanggalLahir,
-    required this.noHp,
-    required this.nik,
-    this.idAlamat,
-    this.idDusun,
-    required this.jalanAlamat,
-    required this.rtAlamat,
-    required this.rwAlamat,
-    required this.namaDusun,
-    required this.namaDesa,
-    required this.namaKabupaten,
-    required this.namaKecamatan,
-    required this.namaProvinsi,
-    required this.kodePos,
-    this.idOrangTua,
-    this.idWali,
-    required this.namaAyah,
-    required this.namaIbu,
-    this.namaWali,
-    this.alamatOrtu,
+    super.id,
+    required super.nisn,
+    required super.namaLengkap,
+    required super.jenisKelamin,
+    required super.idAgama,
+    required super.namaAgama,
+    required super.tempatLahir,
+    required super.tanggalLahir,
+    required super.noHp,
+    required super.nik,
+    super.idAlamat,
+    super.idDusun,
+    required super.jalanAlamat,
+    required super.rtAlamat,
+    required super.rwAlamat,
+    required super.namaDusun,
+    required super.namaDesa,
+    required super.namaKabupaten,
+    required super.namaKecamatan,
+    required super.namaProvinsi,
+    required super.kodePos,
+    super.idOrangTua,
+    super.idWali,
+    required super.namaAyah,
+    required super.namaIbu,
+    super.namaWali,
+    super.alamatOrtu,
   });
 
   factory SiswaModel.fromMap(Map<String, dynamic> map) => SiswaModel(
